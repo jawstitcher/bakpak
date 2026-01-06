@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BakPak — Save context. Reuse anywhere.</title>
+  <meta name="description" content="BakPak is a lightweight Chrome extension to save context while browsing and reuse it anywhere." />
+  <style>
+    :root{
+      --bg:#070A12;
+      --panel:#0E1326;
+      --muted:#A9B3D6;
+      --text:#EAF0FF;
+      --accent:#7C5CFF;
+      --accent2:#22D3EE;
+      --border:rgba(255,255,255,.10);
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(900px 500px at 15% 10%, rgba(124,92,255,.25), transparent 55%),
+        radial-gradient(700px 420px at 85% 15%, rgba(34,211,238,.18), transparent 55%),
+        radial-gradient(700px 500px at 50% 90%, rgba(124,92,255,.14), transparent 60%),
+        var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit}
+    .wrap{max-width:1080px;margin:0 auto;padding:28px 18px 64px}
+    header{
+      display:flex;align-items:center;justify-content:space-between;gap:14px;
+      padding:10px 0 22px;
+    }
+    .brand{display:flex;align-items:center;gap:10px}
+    .dot{
+      width:14px;height:14px;border-radius:50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 0 0 6px rgba(124,92,255,.12);
+    }
+    .brand h1{margin:0;font-size:16px;letter-spacing:.4px}
+    .pill{
+      font-size:12px;color:var(--muted);
+      padding:8px 10px;border:1px solid var(--border);
+      border-radius:999px;background:rgba(255,255,255,.03);
+    }
+    .hero{
+      display:grid;grid-template-columns: 1.2fr .8fr;gap:18px;
+      align-items:stretch;
+      margin-top:8px;
+    }
+    @media (max-width:900px){ .hero{grid-template-columns:1fr} }
+    .card{
+      background: rgba(255,255,255,.03);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:24px;
+      backdrop-filter: blur(10px);
+    }
+    .h-eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      color:var(--muted);
+      font-size:13px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.18);
+      margin-bottom:14px;
+    }
+    .h-eyebrow span{
+      width:10px;height:10px;border-radius:50%;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+    }
+    h2{
+      margin:0 0 10px;
+      font-size:42px;
+      line-height:1.05;
+      letter-spacing:-.6px;
+    }
+    @media (max-width:540px){ h2{font-size:34px} }
+    .sub{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.55;
+      max-width:60ch;
+    }
+    .cta-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      padding:12px 14px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      text-decoration:none;font-weight:600;
+    }
+    .btn.primary{
+      border-color: rgba(124,92,255,.45);
+      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(34,211,238,.45));
+      color:#081025;
+    }
+    .btn:hover{transform: translateY(-1px)}
+    .mini{
+      display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px
+    }
+    .mini .tile{
+      padding:12px;border-radius:14px;border:1px solid var(--border);
+      background:rgba(0,0,0,.16);
+      color:var(--muted);
+      font-size:13px;line-height:1.35;
+    }
+    .mini strong{color:var(--text)}
+    ul{
+      margin:12px 0 0;padding:0 0 0 18px;color:var(--muted);line-height:1.7
+    }
+    .demo{
+      display:flex;flex-direction:column;gap:12px
+    }
+    .demo .shot{
+      border-radius:16px;border:1px dashed rgba(255,255,255,.22);
+      padding:16px;background:rgba(0,0,0,.14);color:var(--muted);
+      min-height:180px;display:flex;flex-direction:column;justify-content:center;gap:10px
+    }
+    .shot b{color:var(--text)}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px;
+      padding:3px 6px;border-radius:8px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+    }
+    form{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+    input{
+      padding:12px 12px;border-radius:12px;border:1px solid var(--border);
+      background:rgba(0,0,0,.22);color:var(--text);
+      outline:none;
+    }
+    input::placeholder{color:rgba(169,179,214,.75)}
+    .fine{
+      color:rgba(169,179,214,.85);
+      font-size:12px;line-height:1.4;margin-top:6px
+    }
+    .section{
+      margin-top:18px;
+      display:grid;grid-template-columns: 1fr 1fr 1fr;gap:12px
+    }
+    @media (max-width:900px){ .section{grid-template-columns:1fr} }
+    .section .card h3{margin:0 0 6px}
+    .muted{color:var(--muted)}
+    footer{
+      margin-top:22px;
+      color:rgba(169,179,214,.75);
+      font-size:12px;
+      display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap
+    }
+    .link{color:rgba(169,179,214,.95);text-decoration:none;border-bottom:1px dashed rgba(169,179,214,.45)}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="dot" aria-hidden="true"></div>
+        <h1>BakPak</h1>
+      </div>
+      <div class="pill">Early access • Chrome extension</div>
+    </header>
+
+    <div class="hero">
+      <div class="card">
+        <div class="h-eyebrow"><span aria-hidden="true"></span> Save context. Reuse anywhere.</div>
+        <h2>Never lose your thinking again.</h2>
+        <p class="sub">
+          BakPak is a lightweight Chrome extension that lets you save context while browsing
+          and reuse it instantly in ChatGPT, Notion, Docs—anywhere you work.
+        </p>
+
+        <div class="cta-row">
+          <a class="btn primary" href="#waitlist">Join early access</a>
+          <a class="btn" href="#how">How it works</a>
+        </div>
+
+        <div class="mini">
+          <div class="tile"><strong>1-click save</strong><br/>Capture URL + title + notes.</div>
+          <div class="tile"><strong>Instant reuse</strong><br/>Copy/paste context into any AI chat.</div>
+          <div class="tile"><strong>Organize lightly</strong><br/>Tags & search (coming next).</div>
+          <div class="tile"><strong>Private by design</strong><br/>You control what’s saved.</div>
+        </div>
+
+        <div id="how" style="margin-top:18px">
+          <h3 style="margin:0 0 8px">How it works</h3>
+          <ul>
+            <li>Click <span class="kbd">Save to BakPak</span> on any page.</li>
+            <li>Add a quick note (optional) so Future You remembers why it mattered.</li>
+            <li>Open BakPak and hit <span class="kbd">Copy Context</span> to paste into ChatGPT or anywhere.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card demo">
+        <h3 style="margin:0">Tonight’s MVP</h3>
+        <p class="muted" style="margin:0">
+          The first version is intentionally simple: save pages + recall them fast.
+        </p>
+
+        <div class="shot">
+          <b>Demo placeholder</b>
+          <div class="muted">Add your 10–20s screen recording GIF/video here later.</div>
+          <div class="row">
+            <span class="kbd">Click</span>
+            <span class="kbd">Save</span>
+            <span class="kbd">Stored locally</span>
+            <span class="kbd">Copy Context</span>
+          </div>
+        </div>
+
+        <div id="waitlist">
+          <h3 style="margin:0 0 6px">Get early access</h3>
+          <p class="muted" style="margin:0 0 8px">Join the waitlist. I’ll send the first install link.</p>
+
+          <!-- OPTION 1 (Default): mailto (no backend needed). Works instantly. -->
+          <form action="mailto:teambakpak@proton.me?subject=BakPak%20Early%20Access&body=Please%20add%20me%20to%20BakPak%20early%20access.%0A%0AEmail:%20" method="post" enctype="text/plain">
+
+            <input type="email" name="email" placeholder="your@email.com" required />
+
